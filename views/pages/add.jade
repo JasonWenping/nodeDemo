@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+    .container
+        .panel.panel-default
+            .panel-heading
+                span 添加文章
+            .panel-body
+                .row
+                    form(method="post" , action="/manage/list").form-horizontal
+                        .form-group
+                            label(for="title").control-label.col-sm-2 标题：   
+                            .col-sm-9
+                                input(type="text",name="title").form-control
+                        .form-group
+                            label(for="summary").control-label.col-sm-2 概要：   
+                            .col-sm-9
+                                input(type="text",name="summary").form-control
+                        .form-group
+                            label(for="summary").control-label.col-sm-2 作者：   
+                            .col-sm-9
+                                input(type="text",name="summary").form-control
+                        .form-group
+                            label(for="summary").control-label.col-sm-2 概要：   
+                            .col-sm-9
+                                input(type="text",name="summary").form-control
+                        .form-group
+                            label(for="summary").control-label.col-sm-2 内容：   
+                            .col-sm-9
+                                textarea(name="content", cols="30", rows="10").form-control
+                        .form-group
+                            .col-sm-offset-2.col-sm-9
+                            button(type="submit").btn.btn-primary 添 加

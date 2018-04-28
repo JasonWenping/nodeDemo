@@ -1,7 +1,20 @@
-doctype html
-html(lang='en')
-    head
-        meta(charset="utf-8")
-        title #{title}
-    body
-        h1 #{title}
+extends ../layout
+
+block content
+    .container
+        .jumbotron
+            h2 #{title}
+        .row
+            .col-xs-9
+                .panel.panel-default
+                    .panel-body
+                        h3 #{articles[id-1].title}
+                        p
+                            span.label.label-default #{articles[1].author} 
+                            span #{articles[1].date}
+                        p  #{articles[1].content} 
+            .col-xs-3
+                ul.list-group
+                    each item in articles
+                        a(href='/detail/#{ item.aId }')
+                            li.list-group-item #{item.title}

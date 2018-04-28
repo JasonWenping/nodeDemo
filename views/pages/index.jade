@@ -1,7 +1,13 @@
-doctype html
-html(lang='en')
-head
-meta(charset="utf-8")
-title #{title}
-body
-h1 #{title}
+extends ../layout
+
+block content
+    .container
+        .jumbotron
+            h2 #{title}
+        each item in articles
+            .panel.panel-default
+                .panel-body
+                    h3 #{item.title}
+                    span #{item.author}
+                    p #{item.summary}
+                    a(href='./detail/#{item.aId}') 详情
