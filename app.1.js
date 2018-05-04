@@ -5,7 +5,9 @@ var port = process.env.PORT || 3000
 var app = express()
 var serveStatic = require('serve-static')
 var bodyParser = require('body-parser')
+var Blogs = require('./models/blogs')
 
+mongoose.connect('mongodb://localhost/nodedemo')
 
 app.set('views','./views/pages')
 app.set('view engine','jade')
@@ -15,14 +17,13 @@ app.listen(port)
 
 //配置路由
 app.get('/', function(req , res) {
-    mongoose.connect('mongodb://localhost/nodedemo',function(){
-        var mySchemas = new mongoose.Schema({title:String,author:String,summary:String})
-        var myModel = mongoose.model('blogs',mySchemas)
-        myModel.find({}).exec(function(err,doc){
-            res.render('index',{
+    Blogs.fetch(function(err , blogs){
+        if(err){
+            console.log(err)
+        }
+        res.render('index',{
             title:'Home page',
-            articles:doc
-            })
+            articles:blogs
         })
     })
 })
