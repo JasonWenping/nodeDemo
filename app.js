@@ -41,12 +41,6 @@ app.get('/detail/:id', function(req , res) {
     })
 })
 
-// app.get('/manage/add', function(req,res){
-//     res.render('add',{
-//         title:'addArticle'
-//     })
-// })
-
 app.get('/manage/update/:id', function(req , res){
     var id = req.params.id;
     Blogs.findById(id,function(err,doc){
@@ -66,14 +60,16 @@ app.get('/manage/update/:id', function(req , res){
 //         console.log(doc)
 //     });
 // })
+
 app.post('/manage/add/new', function(req , res){
     //console.log(req.body);
-    var id = req.body._id
+    var _id = req.body.id
+    console.log(_id)
     var aritcleObj = req.body
     var _article
-    if(id != undefined){
-        console.log(id)
-        Blogs.findById(id,function(err,doc){
+    if(_id != undefined){
+        //console.log(id)
+        Blogs.findById(_id,function(err,doc){
             if(err){
                 console.log(err)
             }
