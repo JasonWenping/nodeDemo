@@ -19,7 +19,7 @@ block content
                                     th 标题
                                     th 作者
                                     th 概要
-                                    th 日期
+                                    //- th 日期
                                     th 操作
                             tbody
                                 each i in articles
@@ -27,13 +27,14 @@ block content
                                         td 
                                             input(type='checkbox')
                                         td #{i._id}
-                                        td #{i._title}
-                                        td #{i._author}
-                                        td #{i._summary}
-                                        td #{i._date}
+                                        td #{i.title}
+                                        td #{i.author}
+                                        td #{i.summary}
+                                        //- td #{i._date}
                                         td 
-                                            button.btn.btn-default.btn-sm 修改
-                                            button.btn.btn-danger.btn-sm 删除
+                                            a(href='/manage/update/#{i.id}',target="_blank")
+                                                span 修改                                           
+                                            button.btn.btn-danger.btn-sm.del(type="button" data-id='#{i._id}') 删除
                         nav(aria-label="page navigation")
                             ul.pagination
                                 li
@@ -44,3 +45,5 @@ block content
                                 li
                                     a(href="#",aria-label="Previous")
                                         span(aria-hidden="true") &raquo;
+
+                        script(src="../public/js/del.js")

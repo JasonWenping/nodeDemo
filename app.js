@@ -5,7 +5,10 @@ var port = process.env.PORT || 3000
 var app = express()
 var serveStatic = require('serve-static')
 var bodyParser = require('body-parser')
+var Blogs = require('./models/blogs')
+var _ = require('underscore')
 
+mongoose.connect('mongodb://localhost/nodedemo')
 
 app.set('views','./views/pages')
 app.set('view engine','jade')
@@ -13,104 +16,112 @@ app.use(serveStatic('bower_components'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.listen(port)
 
+console.log('node start on port: ' + port)
+
 //配置路由
 app.get('/', function(req , res) {
-    mongoose.connect('mongodb://localhost/nodedemo',function(){
-        var mySchemas = new mongoose.Schema({title:String,author:String,summary:String})
-        var myModel = mongoose.model('blogs',mySchemas)
-        myModel.find({}).exec(function(err,doc){
-            res.render('index',{
+    Blogs.fetch(function(err , blogs){
+        if(err){
+            console.log(err)
+        }
+        res.render('index',{
             title:'Home page',
-            articles:doc
-            })
+            articles:blogs
         })
     })
 })
 
 app.get('/detail/:id', function(req , res) {
-    res.render('detail', {
-        title:'Details  page',
-        id: 2,
-        articles:[
-            {
-                aId: 1, 
-                title:'Express 中间件----body-parser？',
-                author:'Jason Yan',
-                content: 'body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。',
-                date: '2011-03-24'
-            },
-            {
-                aId: 2, 
-                title:'前端学习的技巧？',
-                author:'Jason Yan',
-                content: 'body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。',
-                date: '2011-03-26'
-            },
-            {
-                aId: 3, 
-                title:'推荐书目-帮你快速上手项目',
-                author:'Jason Yan',
-                content: 'body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。body-parser是一个HTTP请求体解析中间件，使用这个模块可以解析JSON、Raw、文本、URL-encoded格式的请求体，Express框架中就是使用这个模块做为请求体解析中间件。',
-                date: '2011-03-28'
-            }
-        ]
+    var aid = req.params.id
+    Blogs.findById(aid,function(err ,doc){
+        res.render('detail', {
+            title:'Details  page',
+            articles:doc
+        })
     })
 })
 
-app.get('/manage/add', function(req,res){
+// app.get('/manage/add', function(req,res){
+//     res.render('add',{
+//         title:'addArticle'
+//     })
+// })
+
+app.get('/manage/update/:id', function(req , res){
+    var id = req.params.id;
+    Blogs.findById(id,function(err,doc){
+        res.render('add',{
+            articles:doc
+        })
+    })
+})
+
+// app.get('/manage/list', function(req,res){
+//     var id= req.query.id;
+//     Blogs.remove({_id:id},function(err,doc){
+//         if(err){
+//             console.log('删除失败')
+//         }
+//         console.log('删除成功')
+//         console.log(doc)
+//     });
+// })
+app.post('/manage/add/new', function(req , res){
+    //console.log(req.body);
+    var id = req.body._id
+    var aritcleObj = req.body
+    var _article
+    if(id != undefined){
+        console.log(id)
+        Blogs.findById(id,function(err,doc){
+            if(err){
+                console.log(err)
+            }
+            _article = _.extend(doc , aritcleObj);
+            _article.save(function(err,doc){
+                if(err){
+                    console.log(err)
+                }
+                res.redirect('/detail/'+ doc._id)
+            })
+        })
+    }else{
+        //console.log(aritcleObj)
+        _article=new Blogs({
+            title: aritcleObj.title,
+            category: aritcleObj.category,
+            author: aritcleObj.author,
+            summary: aritcleObj.summary,
+            content: aritcleObj.content
+        })
+        _article.save(function(err,doc){
+            if(err){
+                console.log(err)
+            }
+            res.redirect('/detail/'+ doc._id)
+        })
+    }
+})
+
+app.get('/manage/add' , function(req ,res){
     res.render('add',{
-        title:'addArticle'
+        title:'addArticle',
+        articles:{
+            title: '',
+            category: '',
+            author: '',
+            summary: '',
+            content: ''
+        }
     })
 })
 
 app.get('/manage/list', function(req,res){
-    res.render('list',{
-        title:'listArticle',
-        articles:[
-            {
-                _id: 1, 
-                _title:'Express 中间件',
-                _author:'Jason Yan',
-                _summary: 'body-parser是一个HTTP请求体解析中间件',
-                _date: '2011-03-26'
-            },
-            {
-                _id: 2, 
-                _title:'Express 中间件',
-                _author:'Jason Yan',
-                _summary: 'body-parser是一个HTTP请求体解析中间件',
-                _date: '2011-03-26'
-            },
-            {
-                _id: 3, 
-                _title:'Express 中间件',
-                _author:'Jason Yan',
-                _summary: 'body-parser是一个HTTP请求体解析中间件',
-                _date: '2011-03-26'
-            },
-            {
-                _id: 4, 
-                _title:'Express 中间件',
-                _author:'Jason Yan',
-                _summary: 'body-parser是一个HTTP请求体解析中间件',
-                _date: '2011-03-26'
-            },
-            {
-                _id: 5, 
-                _title:'Express 中间件',
-                _author:'Jason Yan',
-                _summary: 'body-parser是一个HTTP请求体解析中间件',
-                _date: '2011-03-26'
-            },
-            {
-                _id: 6, 
-                _title:'Express 中间件',
-                _author:'Jason Yan',
-                _summary: 'body-parser是一个HTTP请求体解析中间件',
-                _date: '2011-03-26'
-            }
-        ]
+    Blogs.fetch(function(err , doc){
+        res.render('list',{
+            title:'listArticle',
+            articles:doc
+        })
     })
 })
 
-console.log('node start on port: ' + port)

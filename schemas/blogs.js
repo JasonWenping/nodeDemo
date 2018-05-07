@@ -17,7 +17,7 @@ var BlogSchema = new mongoose.Schema({
         }
     }
 })
-BlogSchema.pre('save',function(next){
+BlogSchema.pre('save', function(next){
     if(this.isNew){
         this.meta.addAt = this.meta.updateAt = Date.now()
     }else{
@@ -26,17 +26,17 @@ BlogSchema.pre('save',function(next){
     next()
 })
 
-BlogSchema.static = {
+BlogSchema.statics = {
     fetch: function(cb){
         return this
-        .find({})
-        .sort('meta.updateAt')
-        .exec(cb)
+            .find({})
+            .sort('meta.updateAt')
+            .exec(cb)
     },
-    findByid: function(id,cb){
+    findById: function(id,cb){
         return this
-        .findOne({_id:id})
-        .exec(cb)
+            .findOne({_id:id})
+            .exec(cb)
     }    
 }
 

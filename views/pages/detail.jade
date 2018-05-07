@@ -8,13 +8,13 @@ block content
             .col-xs-9
                 .panel.panel-default
                     .panel-body
-                        h3 #{articles[id-1].title}
+                        h3 #{articles.title}
                         p
-                            span.label.label-default #{articles[1].author} 
-                            span #{articles[1].date}
-                        p  #{articles[1].content} 
+                            span.label.label-default #{articles.author} 
+                            //- span #{articles.date}
+                        p  #{articles.content} 
             .col-xs-3
                 ul.list-group
-                    each item in articles
-                        a(href='/detail/#{ item.aId }')
-                            li.list-group-item #{item.title}
+                    //- each item in aList
+                    //-     a(href='/detail/#{ item._id }')
+                    //-         li.list-group-item #{item.title}
