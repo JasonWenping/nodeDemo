@@ -8,13 +8,14 @@ block content
             .col-xs-9
                 .panel.panel-default
                     .panel-body
-                        h3 #{articles.title}
+                        h3 #{article.title}
                         p
-                            span.label.label-default #{articles.author} 
+                            span.label.label-default #{article.author} 
                             //- span #{articles.date}
-                        p  #{articles.content} 
+                        p  #{article.content} 
             .col-xs-3
-                ul.list-group
-                    //- each item in aList
-                    //-     a(href='/detail/#{ item._id }')
-                    //-         li.list-group-item #{item.title}
+                //- include linklist
+                //- ul.list-group
+                //-     each item in articles
+                //-         a(href='/detail/#{ item._id }')
+                //-             li.list-group-item #{item.title}

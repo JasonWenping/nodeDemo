@@ -16,7 +16,10 @@ block content
                         .form-group
                             label(for="category").control-label.col-sm-2 分类：   
                             .col-sm-9
-                                input(type="text",name="category",value="#{articles.category}").form-control
+                                select(name="category").form-control
+                                    -for(var i=0; i<  category.length ;i++)
+                                        option(value="#{ category[i] }") #{ category[i]}
+                                //- input(type="text",name="category",value="#{articles.category}").form-control
                         .form-group
                             label(for="summary").control-label.col-sm-2 概要：   
                             .col-sm-9
@@ -31,4 +34,4 @@ block content
                                 textarea(name="content", cols="30", rows="10",value="#{articles.content}").form-control
                         .form-group
                             .col-sm-offset-2.col-sm-9
-                            button(type="submit").btn.btn-primary 添 加
+                            button(type="submit").btn.btn-primary 提 交

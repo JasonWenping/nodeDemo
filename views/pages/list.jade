@@ -23,7 +23,7 @@ block content
                                     th 操作
                             tbody
                                 each i in articles
-                                    tr
+                                    tr(class='item-id-#{i._id}')
                                         td 
                                             input(type='checkbox')
                                         td #{i._id}
@@ -46,4 +46,4 @@ block content
                                     a(href="#",aria-label="Previous")
                                         span(aria-hidden="true") &raquo;
 
-                        script(src="../public/js/del.js")
+                        script(src="../js/del.js")

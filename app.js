@@ -13,6 +13,7 @@ mongoose.connect('mongodb://localhost/nodedemo')
 app.set('views','./views/pages')
 app.set('view engine','jade')
 app.use(serveStatic('bower_components'))
+app.use(express.static('public'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.listen(port)
 
@@ -32,42 +33,54 @@ app.get('/', function(req , res) {
 })
 
 app.get('/detail/:id', function(req , res) {
-    var aid = req.params.id
+    var aid = req.params.id;
     Blogs.findById(aid,function(err ,doc){
         res.render('detail', {
             title:'Details  page',
-            articles:doc
+            article:doc
         })
     })
 })
+
+// app.get('/linklist',function(req,res){
+//     Blogs.fetch(function(err,doc){
+//         console.log(doc)
+//         res.render('linklist',{
+//             title: 'Link List',
+//             articles: doc
+//         })
+//     })
+// })
 
 app.get('/manage/update/:id', function(req , res){
     var id = req.params.id;
     Blogs.findById(id,function(err,doc){
         res.render('add',{
+            category: ['前端框架','经验分享','心灵鸡汤','乱码七糟'],
             articles:doc
         })
     })
 })
 
-// app.get('/manage/list', function(req,res){
-//     var id= req.query.id;
-//     Blogs.remove({_id:id},function(err,doc){
-//         if(err){
-//             console.log('删除失败')
-//         }
-//         console.log('删除成功')
-//         console.log(doc)
-//     });
-// })
+app.delete('/manage/list', function(req,res){
+    var id= req.query.id;
+    Blogs.remove({_id:id},function(err,doc){
+        if(err){
+            console.log('删除失败')
+        }
+        else{
+            res.json({success:1})
+        }
+    });
+})
 
 app.post('/manage/add/new', function(req , res){
-    //console.log(req.body);
+    console.log(req.body);
     var _id = req.body.id
     console.log(_id)
     var aritcleObj = req.body
     var _article
-    if(_id != undefined){
+    if(_id != 'undefined'){
         //console.log(id)
         Blogs.findById(_id,function(err,doc){
             if(err){
@@ -102,6 +115,7 @@ app.post('/manage/add/new', function(req , res){
 app.get('/manage/add' , function(req ,res){
     res.render('add',{
         title:'addArticle',
+        category: ['前端框架','经验分享','心灵鸡汤','乱码七糟'],
         articles:{
             title: '',
             category: '',
